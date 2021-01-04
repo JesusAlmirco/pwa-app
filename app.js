@@ -12,7 +12,9 @@ window.addEventListener('load', (e) => {
   pokemonList.addEventListener("change", (e) => {
 		showPokemonCard(e.target.value);
 	});
-  
+
+  // register service worker
+  registerServiceWorker();
 });
 
 // Pokemon select
@@ -56,4 +58,15 @@ function createCard(pokemon) {
         <div class="badge badge-danger">Weight: ${pokemon.weight}</div>
     </div>
     `;
+}
+
+// Service worker
+async function registerServiceWorker() {
+	if ("serviceWorker" in navigator) {
+		try {
+			await navigator.serviceWorker.register("sw.js");
+		} catch (error) {
+			console.log("Failed: ", error);
+		}
+	}
 }
