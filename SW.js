@@ -19,8 +19,25 @@ self.addEventListener("install", async (e) => { //e = event
 });
 
 // Listen for fetching request
-self.addEventListener("fetch", async (e) => {
+self.addEventListener("fetch", async (e) => { //e = event
 	console.log(`ServiceWorker fetch: ${e.request.url}`);
+
+	// Manage the offline data on caches
+	e.respondWith(
+		(async () => {
+			const cache = await caches.open(CACHE_DATA);
+
+			try {
+				const networkResponse = await fetch(e.request);
+				await cache.put(e.request, networkResponse.clone());
+				return networkResponse;
+			} catch (error) {
+				const cachedResponse = await cache.match(e.request);
+				return cachedResponse;
+			}
+		})()
+	);
+
 });
 
 // Activate the service worker

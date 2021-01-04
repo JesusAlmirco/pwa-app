@@ -28,10 +28,24 @@ async function getPokemonList() {
 }
 //POkemon card detail
 async function showPokemonCard(url) {
-  const response = await fetch(url);
-  const json = await response.json();
+  try {
+		const response = await fetch(url);
+		const json = await response.json();
 
-  pokemonCard.innerHTML = createCard(json);
+		pokemonCard.innerHTML = createCard(json);
+	} catch (error) {
+		console.log("Network is unavailable");
+		pokemonCard.innerHTML = offlineCard();
+	}
+}
+
+// Offline card
+function offlineCard() {
+	return `
+        <div class="card-header">
+            <p>Network is unavailable</p>
+        </div>
+    `;
 }
 
 // Pokemon create card
